@@ -192,10 +192,12 @@ void setup(void){
   if (settings->getSettingBool(settingReset)) {
     Serial.println(F("Device was reset to system default settings"));
     // Setup AP mode
+    WiFi.mode(WIFI_AP);
     WiFi.softAP(hostname.c_str());
     device->setSetupMode(true);
   } else {
     // Setup STA mode
+    WiFi.mode(WIFI_STA);
     WiFi.begin(settings->getSettingString(settingSSID), settings->getSettingString(settingPSK));
     // Wait for connection
     while (WiFi.status() != WL_CONNECTED) {

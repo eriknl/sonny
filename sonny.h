@@ -25,6 +25,7 @@ along with sonny.  If not, see <http://www.gnu.org/licenses/>.
 
 
 #define LUMBERLOG_HOST  "192.168.0.2"
+//#define SONOFF_DEVICE   SONOFF
 //#define SONOFF_DEVICE   SONOFF_S20
 #define SONOFF_DEVICE   SONOFF_DUAL
 //#define SONOFF_DEVICE   SONOFF_TOUCH

@@ -387,7 +387,7 @@ void Sonny::handleMQTT() {
     }
     writeAll();
   }
-//  mqtt->ping();
+//  mqtt->ping(1);
 }
 
 /*
