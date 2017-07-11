@@ -387,7 +387,10 @@ void Sonny::handleMQTT() {
     }
     writeAll();
   }
-//  mqtt->ping(1);
+  if ((millis() - lastPing) > pingInterval) {
+    mqtt->ping(5);
+    lastPing = millis();
+  }
 }
 
 /*
@@ -403,6 +406,7 @@ bool Sonny::connectMQTT() {
   if (!(ret = mqtt->connect())) {
     logFormatted(Logger::severityInfo, "MQTT Connected\r\n");
     setLedState(0, true);
+    lastPing = millis();
   } else {
     logFormatted(Logger::severityError, "%s\r\n", mqtt->connectErrorString(ret));
     setLedDutyCycle(0, 75);

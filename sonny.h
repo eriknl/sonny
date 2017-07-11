@@ -133,6 +133,8 @@ protected:
   Adafruit_MQTT_Client      *mqtt;                                // MQTT connection
   Logger                    **loggers;                            // Debug and logging
   uint8_t                   loggerCount = 0;                      // Amount of loggers
+  uint32_t                  pingInterval = 180000;                // Time that has to elapse between pings
+  uint32_t                  lastPing;                             // Time of last ping
 };
 
 class SonnyS20 : public Sonny {
