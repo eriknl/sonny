@@ -9,6 +9,8 @@ Implemented features:
 - MQTT support
 	- Publishers for inputs
 	- Subscribers and publishers for outputs
+- Remeha Avanta heater serial port
+- Dutch smart meter P1 port
 - Settings manager
 	- Based on SPIFFS files
 	- Settings stored binary
