@@ -90,6 +90,7 @@ void wwwConfigure() {
           }
         }
       }
+      page += "<h2>Settings</h2><p>";
       page += settingsForm.toString();
       page += (settings->getSettingBool(settingReset) ? "Reset" : "No reset");
     break;
@@ -117,18 +118,19 @@ void wwwControl() {
     case HTTP_POST:
     break;
     case HTTP_GET:
+      page += "<h2>Inputs</h2><p>";
       HtmlTable inputTable("inputTable", 4, inputTableHeaders);
       for (i = 0; i < device->getInputCount(); i++) {
         inputTable.addRow({String(i, DEC), String(device->getInputDevice(i)->lastState, DEC), String(device->getInputDevice(i)->publishTopic), String((millis() - device->getInputDevice(i)->lastStateTime), DEC)});
       }
       page += inputTable.toString();
-      
+
+      page += "<h2>Outputs</h2><p>";
       HtmlTable outputTable("outputTable", 5, outputTableHeaders);
       for (i = 0; i < device->getOutputCount(); i++) {
         outputTable.addRow({String(i, DEC), String(device->getOutputDevice(i)->lastState, DEC), String(device->getOutputDevice(i)->publishTopic), String(device->getOutputDevice(i)->mqttSubscriber->topic), String((millis() - device->getOutputDevice(i)->lastStateTime), DEC)});
       }
       page += outputTable.toString();
-
     break;
   }
   page += pageFooter();
@@ -169,8 +171,8 @@ String pageFooter() {
  */
 void setup(void){
   settings = new SettingsManager(F("/settings.dat"));
-  Serial.begin(115200);
-  Serial.println("");
+//  Serial.begin(115200);
+//  Serial.println("");
 
   settings->addSettingString(settingSSID, true, F("ssid"), F("WiFi SSID"), "", 32);
   settings->addSettingPassword(settingPSK, true, F("psk"), F("WiFi PSK"), "", 32);
@@ -185,12 +187,12 @@ void setup(void){
   settings->addSettingString(settingMqttPassword, true, F("mqtt_key"), F("MQTT password"), "", 64);
   settings->addSettingString(settingMqttHostFingerprint, false, F("mqtt_host_fingerprint"), F("MQTT host SHA fingerprint"), "", 60);  // implemented later?
   settings->restoreSettings();
-  Serial.println("Complete");
+//  Serial.println("Complete");
   device = Sonny::setupDevice(&client, settings); // device specific configuration
   device->setLedDutyCycle(0, 50);           // show we're initialising
 
   if (settings->getSettingBool(settingReset)) {
-    Serial.println(F("Device was reset to system default settings"));
+//    Serial.println(F("Device was reset to system default settings"));
     // Setup AP mode
     WiFi.mode(WIFI_AP);
     WiFi.softAP(hostname.c_str());
@@ -204,11 +206,11 @@ void setup(void){
       device->handleIO(); // Allow input triggers even when there is no connection
       yield();
     }
-    Serial.println("");
-    Serial.print(F("Connected to "));
-    Serial.println(settings->getSettingString(settingSSID));
-    Serial.print(F("IP address: "));
-    Serial.println(WiFi.localIP());
+//    Serial.println("");
+//    Serial.print(F("Connected to "));
+//    Serial.println(settings->getSettingString(settingSSID));
+//    Serial.print(F("IP address: "));
+//    Serial.println(WiFi.localIP());
   }
 
   if (device->getSetupMode()) {
@@ -221,7 +223,7 @@ void setup(void){
   }
 
   server.begin();
-  Serial.println(F("HTTP server started"));
+//  Serial.println(F("HTTP server started"));
 
   ArduinoOTA.setHostname(settings->getSettingString(settingHostname));
   ArduinoOTA.onStart([]() {
@@ -268,7 +270,9 @@ void setup(void){
 
 void loop(void){
   device->handleIO();
+#ifndef SONNY_P1
   device->handleMQTT();
+#endif
   server.handleClient();
   ArduinoOTA.handle();
 }
